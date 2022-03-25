@@ -1,0 +1,8 @@
+tasks:
+  - init: |
+      npm install -g @aragon/cli
+    command: |
+      echo 'TODO: start app'
+
+image:
+  file: .gitpod.Dockerfile
