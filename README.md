@@ -2,7 +2,7 @@
 
 https://hack.aragon.org/docs/guides-use-agent
 
-I needed to run as root with Node version 12.22.11
+I needed to run as root with Node version 10.24.1
 
 # open-source-compensation
 
