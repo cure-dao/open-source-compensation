@@ -1,7 +1,14 @@
+# Aragon Agent
+
+https://hack.aragon.org/docs/guides-use-agent
+
+I needed to run as root with Node version 12.22.11
+
 # open-source-compensation
+
 Retroactive public goods compensation for open-source developers contributing to CureDAO stack
 
-Libraries we use are listed in the composer.json and package.json files of all cure-dao repositories. 
+Libraries we use are listed in the composer.json and package.json files of all cure-dao repositories.
 
 ```
 create table open_source_repositories
@@ -102,27 +109,33 @@ create table open_source_repositories
     license                tinytext        null
 );
 ```
+
 ### Update `open_source_repositories` table:
+
 1. Read the composer.json and package.json files of all cure-dao repositories
 2. Fetch the data about each repo from the GitHub API: https://docs.github.com/en/rest/reference/repos
-1. `INSERT IGNORE` the GitHub API response into the `open_source_repositories` table with `started_using_at` and `curedao_repository_id`
+3. `INSERT IGNORE` the GitHub API response into the `open_source_repositories` table with `started_using_at` and `curedao_repository_id`
 
 ### Update `stopped_using_at` in `open_source_repositories` table for removed packages:
+
 1. Loop through all records in `open_source_repositories` table and set `stopped_using_at` to current date if not found in package.json or composer.json
 
 ### Update `open_source_contributors` table:
+
 1. [Fetch all commits](https://docs.github.com/en/rest/reference/commits) to each library and store each one in a `open_source_commits` table along with the `github_user_id` `github_username`, `commit_date`, `number_of_lines`, and `commit_sha`, and the `curedao_tokens_awarded` for that git commit
-1. Fetch a list of all contributor emails to each library from the [GitHub API](https://docs.github.com/en/rest/reference/users) and store it in an `open_source_contributors` table in the CureDAO database with their `github_username`, `github_id`, `email`, `name`, and `last_emailed_at` field.
+2. Fetch a list of all contributor emails to each library from the [GitHub API](https://docs.github.com/en/rest/reference/users) and store it in an `open_source_contributors` table in the CureDAO database with their `github_username`, `github_id`, `email`, `name`, and `last_emailed_at` field.
 
 ### Get Harmony Address from Newly Added Contributors
+
 1. Email every contributor with a `null` `last_emailed_at` field explaining CureDAO's mission and why we're paying them
-1. Explain that they will receive an ongoing percentage of all revenue from the project in proportion to their fraction of total minted CURE tokens
-1. Provide instructions about how to add the Harmony ONE chain to their Metamask wallet
-1. Provide a link to a GitHub login form
-1. After they log in, send them to a https://notionforms.io/forms/join-curedao (or one we make) where they can enter their GitHub ID and Harmony ONE address
-1. Store their Harmony address in the `open_source_contributors` table. 
+2. Explain that they will receive an ongoing percentage of all revenue from the project in proportion to their fraction of total minted CURE tokens
+3. Provide instructions about how to add the Harmony ONE chain to their Metamask wallet
+4. Provide a link to a GitHub login form
+5. After they log in, send them to a https://notionforms.io/forms/join-curedao (or one we make) where they can enter their GitHub ID and Harmony ONE address
+6. Store their Harmony address in the `open_source_contributors` table.
 
 ### Send Tokens Every X Days for New Commits
+
 1. Fetch the commits from the `open_source_commits` table, where the `curedao_tokens_awarded` is null.
 2. Fetch the `open_source_contributors` for the commits
 3. Calculated total number of tokens to be awarded
@@ -131,8 +144,10 @@ create table open_source_repositories
 6. If they click neither link, mark them as unresponsive in the database and don't send future tokens until we hear from them. (We don't want to waste them on dead emails or people who don't care about them.)
 
 ### Questions
+
 1. How should the amount of CURE tokens be determined? (Number of commits? Number of lines committed? A combination?  Something else?)
 2. How often should we send them to maximize immediate gratification while avoiding spamming them?  Every 14 days?
 
 ### References
+
 - https://github.com/aragon/aragon.js
