@@ -4,8 +4,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #source "$(pwd -P)/all_functions.sh" "${BASH_SOURCE[0]}"
 
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-nvm install 12.22.11
-nvm use 12.22.11
+nvm install 10.24.1
+nvm use 10.24.1
 sudo npm install -g @aragon/cli
 aragon -v
 
